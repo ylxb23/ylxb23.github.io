@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="java,set,list,queue,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="摇蒲小笙" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="java内置的数据结构中主要有Collection和Map两个接口实现的集合结构类，Collection用于存储数组形式的单一对象集合，Map使用Key-Value的键值对结构存储对象的集合。其中Collection结构下又主要有List, Set, Queue三种接口，如常用的ArrayList, LinkedList是List的主要实现，HashSet, TreeSet是Set的实现，Prio">
+<meta name="keywords" content="java,set,list,queue">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中常用数据结构-Collection">
+<meta property="og:url" content="xn--4gq28lcrm21g.cc/article/2017/06/06/2017-06-06-Java中常用数据结构-Collection/index.html">
+<meta property="og:site_name" content="摇蒲小笙">
+<meta property="og:description" content="java内置的数据结构中主要有Collection和Map两个接口实现的集合结构类，Collection用于存储数组形式的单一对象集合，Map使用Key-Value的键值对结构存储对象的集合。其中Collection结构下又主要有List, Set, Queue三种接口，如常用的ArrayList, LinkedList是List的主要实现，HashSet, TreeSet是Set的实现，Prio">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="/images/coding/jdk_collection_mind_map.png">
+<meta property="og:updated_time" content="2020-06-06T17:47:36.778Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java中常用数据结构-Collection">
+<meta name="twitter:description" content="java内置的数据结构中主要有Collection和Map两个接口实现的集合结构类，Collection用于存储数组形式的单一对象集合，Map使用Key-Value的键值对结构存储对象的集合。其中Collection结构下又主要有List, Set, Queue三种接口，如常用的ArrayList, LinkedList是List的主要实现，HashSet, TreeSet是Set的实现，Prio">
+<meta name="twitter:image" content="/images/coding/jdk_collection_mind_map.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="xn--4gq28lcrm21g.cc/article/2017/06/06/2017-06-06-Java中常用数据结构-Collection/">
+
+
+
+
+
+  <title>Java中常用数据结构-Collection | 摇蒲小笙</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?7fd82a4fddb6f5a8020353452222fca3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">摇蒲小笙</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">天地不仁，以万物为刍狗</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="xn--4gq28lcrm21g.cc/article/2017/06/06/2017-06-06-Java中常用数据结构-Collection/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zero.Zeng">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/headicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="摇蒲小笙">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java中常用数据结构-Collection</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-06T14:48:44+08:00">
+                2017-06-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/dist/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/article/2017/06/06/2017-06-06-Java中常用数据结构-Collection/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="article/2017/06/06/2017-06-06-Java中常用数据结构-Collection/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </span></div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>java内置的数据结构中主要有Collection和Map两个接口实现的集合结构类，Collection用于存储数组形式的单一对象集合，Map使用Key-Value的键值对结构存储对象的集合。其中Collection结构下又主要有List, Set, Queue三种接口，如常用的ArrayList, LinkedList是List的主要实现，HashSet, TreeSet是Set的实现，PriorityQueue, ConcurrentLinkedQueue是Queue的实现，除此之外，BlockingQueue和Deque也是Queue的常用接口。（基于jdk1.8）</p>
+<a id="more"></a>
+<p><strong>Collection(interface)</strong><br><code>java.util.Collection</code>接口是集合类数据结构的根接口，改接口继承了<code>java.lang.Iterator</code>接口，即所有Collection的实现都是可枚举的。该接口具有的功能有：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">add(E)                              <span class="comment">// 向集合中添加一个E类型的元素</span></span><br><span class="line">addAll(Collection&lt;?&gt;)               <span class="comment">// 将一个集合中所有的元素添加到该集合中</span></span><br><span class="line">clear()                             <span class="comment">// 移除所有该集合中的元素</span></span><br><span class="line">contains(Object)                    <span class="comment">// 该集合中是否包含这个Object元素</span></span><br><span class="line">containsAll(Collection&lt;?&gt;)          <span class="comment">// 该集合中是否包含另一个集合中的所有元素</span></span><br><span class="line">isEmpty()                           <span class="comment">// 该集合元素数量是否为0</span></span><br><span class="line">iterator()                          <span class="comment">// 获取该集合的枚举对象</span></span><br><span class="line">remove(Object)                      <span class="comment">// 从该集合中移除Object元素,在字类型的实现中，常给出移除指定索引的元素和指定元素</span></span><br><span class="line">removeAll(Collection&lt;? extends E&gt;)  <span class="comment">// 从该集合中移除另一集合中的所有元素</span></span><br><span class="line">retainAll(Collection&lt;?&gt;)            <span class="comment">// 只保留该集合中包含在指定集合中的元素(可选操作)</span></span><br><span class="line">size()                              <span class="comment">// 获取该集合的元素个数</span></span><br><span class="line">toArray()                           <span class="comment">// 返回该集合的数组</span></span><br><span class="line">toArray(T[])                        <span class="comment">// 返回该集合的数组，如果T[]的长度大于或等于该集合的元素数量则将该集合复制到T[]这个数组中，T[]长度超出的部分置为null</span></span><br></pre></td></tr></table></figure></p>
+<p>在jdk1.8中，增加了对集合的stream操作，且对interface中增加default关键字，对<code>java.util.Collection</code>接口拓展了以下方法，并使用default实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">parallelStream()                    <span class="comment">// 返回一个并行流对象，并将此集合作为其源</span></span><br><span class="line">removeIf(Predicate&lt;? <span class="keyword">super</span> E&gt;)      <span class="comment">// 从该集合中移除满足该Predicate描述的元素</span></span><br><span class="line">spliterator()                       <span class="comment">// 从该集合中创建一个可分割迭代器(splitable iterator可分割迭代器)</span></span><br><span class="line">stream()                            <span class="comment">// 将这个集合作为源返回一个可序列的流</span></span><br></pre></td></tr></table></figure></p>
+<p><img src="/images/coding/jdk_collection_mind_map.png" alt="Collection接口" title="Collection类型接口及实现类型"></p>
+<h2 id="List-interface"><a href="#List-interface" class="headerlink" title="List(interface)"></a>List(interface)</h2><p>一种有序的集合，使用这个接口可以精确地控制列表中每个元素被插入的位置。可以通过他们的整数索引(在列表中的位置)访问元素，并搜索列表中的元素。除Collection声明之外的主要功能有：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">add(<span class="keyword">int</span>, E)                             <span class="comment">// 将元素E添加到指定位置上</span></span><br><span class="line">addAll(<span class="keyword">int</span>, Collection&lt;? extends E&gt;)    <span class="comment">// 将另一集合插入到该集合的指定位置上</span></span><br><span class="line">get(<span class="keyword">int</span>)                                <span class="comment">// 获取该集合上指定位置的元素</span></span><br><span class="line">indexOf(Object)                         <span class="comment">// 获取元素Object在该集合上的位置</span></span><br><span class="line">lastIndexOf(Object)                     <span class="comment">// 获取元素Object在该集合上最后的位置</span></span><br><span class="line">listIterator()                          <span class="comment">// 返回一个列表迭代器</span></span><br><span class="line">listIterator(<span class="keyword">int</span>)                       <span class="comment">// 从指定位置开始返回一个列表迭代器</span></span><br><span class="line">set(<span class="keyword">int</span>, E)                             <span class="comment">// 设置该集合指定位置上元素的值</span></span><br><span class="line">subList(<span class="keyword">int</span>, <span class="keyword">int</span>)                       <span class="comment">// 返回截取集合的子集合</span></span><br><span class="line"></span><br><span class="line">replaceAll(UnaryOperator&lt;E&gt;)            <span class="comment">// 使用运算符(函数变换)覆盖原值</span></span><br><span class="line">sort(Comparator&lt;? <span class="keyword">super</span> E&gt;)             <span class="comment">// 使用外排序返回排序后的集合</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="ArrayList"><a href="#ArrayList" class="headerlink" title="ArrayList"></a>ArrayList</h3><p>ArrayList基于数组实现，可通过ArrayList()使用默认初始容量大小（10）, ArrayList(capacity)指定初始容量大小, ArrayList(Collection&lt;?&gt;)从另一个集合对象中赋值组装，三种方式构造一个实例。ArrayList可以指定初始容量大小，但是可以无限扩容（也有限制，毕竟记录容量大小的变量类型为int类型，即最大容量为<code>Integer.MAX_VALUE</code>），其扩容策略如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacityInternal</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (elementData == DEFAULTCAPACITY_EMPTY_ELEMENTDATA) &#123;</span><br><span class="line">        minCapacity = Math.max(DEFAULT_CAPACITY, minCapacity);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ensureExplicitCapacity(minCapacity);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureExplicitCapacity</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    modCount++;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">if</span> (minCapacity - elementData.length &gt; <span class="number">0</span>)</span><br><span class="line">        grow(minCapacity);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">int</span> oldCapacity = elementData.length;</span><br><span class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + (oldCapacity &gt;&gt; <span class="number">1</span>);</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    <span class="comment">// minCapacity is usually close to size, so this is a win:</span></span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>即当向集合中增加一个元素时，先通过<code>ensureCapacityInternal</code>方法判断，并必要时增加数组的容量。在<code>ensureCapacityInternal</code>中，<code>minCapacity</code>值为添加元素后数组允许的最小容量即<code>size+1</code>，当集合中的数组为空数组时，<code>minCapacity</code>重新赋值为默认容量与<code>minCapacity</code>的较大值（其实就是默认容量大小10），并在<code>ensureExplicitCapacity</code>中判断容量是否需要增加。通过<code>grow</code>方法可以看出，当集合中容量不够用时，即将当前容量扩容至当前容量的3/2倍（取整），如果此次增加元素后数组长度达到最大数组长度(<code>Integer.MAX_VALUE - 8</code>)，则直接将新的容量设置为<code>Integer.MAX_VALUE</code>，并将旧数组拷贝到新的大容量的数组中。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>ArrayList在插入元素的时候需要考虑是否扩容，如果需要减小集合的容量，则可通过<code>trimToSize()</code>方法将当前集合的容量设置为size大小。</li>
+<li>ArrayList是非线程安全的集合。</li>
+<li>使用遍历删除集合中的元素时，不应使用<code>for</code>, <code>while</code>的遍历方式进行元素的删除，应当使用迭代器<code>iterator()</code>去移除。</li>
+<li>在明确集合的大小时，应当通过<code>new ArrayList&lt;&gt;(size)</code>手动指定集合的初始容量，而非完全依赖ArrayList的自动扩容去依次递增容量，降低数组赋值带来的额外开销。</li>
+<li>ArrayList中的elementData是通过<code>transient</code>修饰的，但它却实现了Serializable接口，注意看它的<code>writeObject(ObjectOutputStream)</code>和<code>readObject(ObjectInputStream)</code>，使用<code>transient</code>修饰存储对象是为了只序列化有效的容量，以达到不浪费资源的目的。这点同样适用以下序数据结构列化的实现原因。</li>
+</ul>
+</blockquote>
+<h3 id="Vector"><a href="#Vector" class="headerlink" title="Vector"></a>Vector</h3><p>Vector与ArrayList一样，是基于数组实现的集合类型，相对于ArrayList，Vector的所有公有方法都具有<code>synchronized</code>关键字，即Vecotr集合是线程安全的集合，可以通过<code>new Vector()</code>实例化一个默认容量大小的集合,<code>new Vector(int)</code>实例化一个指定容量大小的集合, <code>new Vector(int, int)</code>实例化一个指定容量大小，且指定其容量递增的大小, <code>new Vector(Collection&lt;? extends E&gt;)</code>从另一个集合中创建一个Vector集合。Vector除了是线程安全的集合外，与ArrayList相比，它的容量递增方案也不一样：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 未指定容量的情况下，默认Vector的容量为10</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">Vector</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(<span class="number">10</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">ensureCapacityHelper</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">if</span> (minCapacity - elementData.length &gt; <span class="number">0</span>)</span><br><span class="line">        grow(minCapacity);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">int</span> oldCapacity = elementData.length;</span><br><span class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + ((capacityIncrement &gt; <span class="number">0</span>) ?</span><br><span class="line">                                     capacityIncrement : oldCapacity);</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - minCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = minCapacity;</span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    elementData = Arrays.copyOf(elementData, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>与ArrayList一样，<code>minCapacity</code>值为<code>size+1</code>，当插入下一个元素导致容量不够的情况下，Vector将通过<code>grow</code>方法扩容，可以看出，如果未指定<code>capacityIncrement</code>的值(其默认值为0），扩容后他的容量将是原容量的2倍，如果指定<code>capacityIncrement</code>则Vector每次容量递增为指定的大小，这点比ArrayList更为灵活。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>Vector是线程安全的集合</li>
+<li>鉴于在Vector元素超过容量的情况下，如果不指定<code>capacityIncrement</code>，则其扩容为原容量的两倍，故最好初始化Vector对象的时候应选择适当的扩容大小。</li>
+<li>与ArrayList一致，在需要移除Vector中的元素的时候，应选择通过迭代器访问的方式移除元素，避免空指针异常。</li>
+</ul>
+</blockquote>
+<h4 id="Stack"><a href="#Stack" class="headerlink" title="Stack"></a>Stack</h4><p>Stark（栈）是Vector的子类，即Stack也是线程安全的集合，扩容方案也跟随Vector，不同的是，在实例化Stack的时候，并不提供指定扩容大小的构造声明。栈的使用有以下常用方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">push(E)         <span class="comment">// 入栈</span></span><br><span class="line">peek()          <span class="comment">// 获取栈顶元素</span></span><br><span class="line">pop()           <span class="comment">// 出栈(通过 peek()获取数组中最后一个元素，再将其删除)</span></span><br><span class="line">empty()         <span class="comment">// 判断是否为空</span></span><br><span class="line">search(Object)  <span class="comment">// 栈中查找(从栈顶开始查找, 即使用 lastIndexOf(Object))</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>Stack是线程安全的栈</li>
+<li>Stack的声明不能指定其容量和扩容递增大小</li>
+</ul>
+</blockquote>
+<h3 id="LinkedList"><a href="#LinkedList" class="headerlink" title="LinkedList"></a>LinkedList</h3><p>LinkedList是基于双向链表的集合，不同于数组类型的集合，它是通过节点依次的链接以达到元素与元素关联成集合的目的。LinkedList中的节点为它的静态内部类<code>Node&lt;E&gt;</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Node</span>&lt;<span class="title">E</span>&gt; </span>&#123;</span><br><span class="line">    E item;</span><br><span class="line">    Node&lt;E&gt; next;</span><br><span class="line">    Node&lt;E&gt; prev;</span><br><span class="line"></span><br><span class="line">    Node(Node&lt;E&gt; prev, E element, Node&lt;E&gt; next) &#123;</span><br><span class="line">        <span class="keyword">this</span>.item = element;</span><br><span class="line">        <span class="keyword">this</span>.next = next;</span><br><span class="line">        <span class="keyword">this</span>.prev = prev;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看出在LinkedList中的节点除了代表元素本身的<code>item</code>之外还有两个分别指向上一个元素(<code>prev</code>)和指向下一个元素(<code>next</code>)的引用。<br>LinkedList作为链表方式的实现具有在链表两端进行插入和删除操作，同时也能快速的在指定的位置插入和删除元素，LinkedList的常用操作有：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">add(E)                                  <span class="comment">// 将元素E包装为Node，追加到链表的最后一个</span></span><br><span class="line">add(<span class="keyword">int</span>, E)                             <span class="comment">// 将元素E包装为Node，插入到指定位置，包装好Node的prev指针指向该位置前一个元素，next指针指向原来在该位置的元素</span></span><br><span class="line">addAll(Collection&lt;? extends E&gt;)         <span class="comment">// 将另一集合中的元素包装为Node，并依个追加到链表后面</span></span><br><span class="line">addAll(<span class="keyword">int</span>, Collection&lt;? extends E&gt;)    <span class="comment">// 将另一集合中的元素包装为Node，并依个追加到指定位置后面</span></span><br><span class="line">addFirst(E)                             <span class="comment">// 将元素E包装为Node，追加到链表首部</span></span><br><span class="line">addLast(E)                              <span class="comment">// 同 add(E)</span></span><br><span class="line">offer(E)                                <span class="comment">// 同 add(E)</span></span><br><span class="line">offerFirst(E)                           <span class="comment">// 同 addFirst(E)</span></span><br><span class="line">offerLast(E)                            <span class="comment">// 同 addLast(E)</span></span><br><span class="line"></span><br><span class="line">remove()                                <span class="comment">// 移除链表首部第一个元素</span></span><br><span class="line">remove(<span class="keyword">int</span>)                             <span class="comment">// 移除指定位置的元素</span></span><br><span class="line">removeFirst()                           <span class="comment">// 同 remove()</span></span><br><span class="line">removeLast()                            <span class="comment">// 移除链表尾部的最后一个元素</span></span><br><span class="line">remove(Object)                          <span class="comment">// 从链表首部开始查找，移除指定元素(只移除一个)</span></span><br><span class="line">removeFirstOccurrence(Object)           <span class="comment">// 同 remove(Object)</span></span><br><span class="line">removeLastOccurrence(Object)            <span class="comment">// 从链表尾部开始查找，移除指定元素(只移除一个)</span></span><br><span class="line"></span><br><span class="line">getFirst()                              <span class="comment">// 获取链表首部第一个元素，当链表为空时，抛出NoSuchElementException异常</span></span><br><span class="line">getLast()                               <span class="comment">// 获取链表尾部最后一个元素，当链表为空时，抛出NoSuchElementException异常</span></span><br><span class="line">get(<span class="keyword">int</span>)                                <span class="comment">// 获取指定位置元素</span></span><br><span class="line"></span><br><span class="line">set(<span class="keyword">int</span>, E)                             <span class="comment">// 将指定位置的元素替换</span></span><br><span class="line"></span><br><span class="line">peek()                                  <span class="comment">// 获取链表首部第一个元素，当链表为空时，返回 null</span></span><br><span class="line">peekFirst()                             <span class="comment">// 同 peek()</span></span><br><span class="line">peekLast()                              <span class="comment">// 获取链表尾部最后一个元素，当链表为空时，返回 null</span></span><br><span class="line">element()                               <span class="comment">// 同 getFirst()</span></span><br><span class="line">poll()                                  <span class="comment">// 移除链表首部第一个元素，并返回其值，当链表为空时，返回 null</span></span><br><span class="line">pollFirst()                             <span class="comment">// 同 poll()</span></span><br><span class="line">pollLast()                              <span class="comment">// 移除链表尾部最后一个元素，并返回其值，当链表为空时，返回 null</span></span><br><span class="line"></span><br><span class="line">push(E)                                 <span class="comment">// 同 addFirst(E), 可以通过 push,pop操作实现栈的功能</span></span><br><span class="line">pop()                                   <span class="comment">// 同 removeFirst()</span></span><br><span class="line"></span><br><span class="line">descendingIterator()                    <span class="comment">// 返回从尾部到首部的迭代器</span></span><br><span class="line">listIterator(<span class="keyword">int</span>)                       <span class="comment">// 返回从首部到尾部的迭代器</span></span><br><span class="line">spliterator()                           <span class="comment">// 创建一个可分割迭代器(splitable iterator可分割迭代器)，当前元素指向首部元素</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>LinkedList是非线程安全的线性表</li>
+<li>LinkedList是基于节点，通过<code>prev</code>, <code>next</code>指针链接元素实现的双向链表</li>
+<li>获取LinkedList中的首部/尾部元素，如果不确定链表是否为空时，应使用<code>peek()</code>,<code>peekFirst()</code>,<code>peekLast()</code>获取，避免<code>NoSuchElementException</code></li>
+</ul>
+</blockquote>
+<h3 id="CopyOnWriteArrayList"><a href="#CopyOnWriteArrayList" class="headerlink" title="CopyOnWriteArrayList"></a>CopyOnWriteArrayList</h3><p>CopyOnWriteArrayList是<code>java.util.concurrent</code>包下的基于数组的List的实现，concurrent包是jdk在为多核CPU编程提供一套类库，关于concurrent包的介绍可以参考<a href="http://tutorials.jenkov.com/java-concurrency/index.html" title="java-concurrency" target="_blank" rel="noopener">http://tutorials.jenkov.com/</a>。故名思议，该集合是基于数组的方式通过复制实现的线程安全的集合，查看它的添加元素的实现：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lock();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Object[] elements = getArray();</span><br><span class="line">        <span class="keyword">int</span> len = elements.length;</span><br><span class="line">        Object[] newElements = Arrays.copyOf(elements, len + <span class="number">1</span>);</span><br><span class="line">        newElements[len] = e;</span><br><span class="line">        setArray(newElements);</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看出，每有一个元素插入，里面的存储数组都会被拷贝一份，并在目标数组中容量<code>+1</code>。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>每插入一个元素都会复制一遍旧数组,即写时复制，是个比较吃性能的动态数组。同时，插入元素时不往原存储容器中插入，而是copy一个新的容器，插入完成后再将容器的引用指向新容器，所以在读的时候，发现并没有给读操作加锁，是一种读写分离的实现。同样适用于CopyOnWriteArraySet。</li>
+</ul>
+</blockquote>
+<h2 id="Set-interface"><a href="#Set-interface" class="headerlink" title="Set(interface)"></a>Set(interface)</h2><p>Set是一个不包含重复元素的集合的根接口</p>
+<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><p>HashSet用来存储不包含重复元素的单一对象组成的集合，可以通过<code>new HashSet()</code>实例化一个默认容量(16)的集合，<code>new HashSet(int)</code>实例化一个指定初始容量大小集合，<code>new HashSet(int, float)</code>实例化一个指定容量和负荷系数，<code>new HashSet(Collection&lt;? extends E&gt;()</code>使用另一集合为源实例化一个默认容量，负荷系数为该集合的大小的2.33倍与16取较大值。底层的实现却是通过HashMap作为元素的存储对象，使用HashMap&lt;Key, Value&gt;的Key来存储元素，Value是一个空对象(<code>Object PRESENT = new Object()</code>)，因为HashMap是一个Key和Value都可以为null的map类型，故，当Set中插入null时，仅返回false，并不抛出异常:<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * HashSet的add(E)实现</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">add</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.put(e, PRESENT)==<span class="keyword">null</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>HashSet在移除元素的时候，也是通过在map中移除掉对应的Entity，当移除的元素为null或者map中不存在该key值时，返回false：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * HashSet的remove(Object)实现</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">remove</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.remove(o)==PRESENT;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>同时，由于HashSet是通过HashMap的Key存储数据，即它存储的数据是一个无序的集合，故jdk中并不能提供<code>get(index)</code>、<code>remove(index)</code>的方式访问HashSet中的元素，只能通过迭代器的方式访问：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * HashSet的迭代器就是HashMap中键的迭代结果</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> Iterator&lt;E&gt; <span class="title">iterator</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> map.keySet().iterator();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>HashSet是非线程安全的(毕竟用来存储HashSet的数据结构HashMap也是非线性安全的)</li>
+<li>HashSet中元素的访问需通过迭代器的方式访问，它的迭代器就是HashMap中的<code>map.keySet().iterator()</code></li>
+</ul>
+</blockquote>
+<h4 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h4><p>LinkedHashSet是HashSet的子类，除了初始容量及负荷系数的初始化上不一样之外，并没有其他的不同。</p>
+<h3 id="SortedSet-interface-、NavigableSet-interface"><a href="#SortedSet-interface-、NavigableSet-interface" class="headerlink" title="SortedSet(interface)、NavigableSet(interface)"></a>SortedSet(interface)、NavigableSet(interface)</h3><p>故名思议，SortedSet是有序Set的接口，SortedSet提供以下方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">comparator()            <span class="comment">// 所有有序的Set都需要实现元素的比较器</span></span><br><span class="line">subSet(E, E)            <span class="comment">// 获取两元素之间的子集合</span></span><br><span class="line">headSet(E)              <span class="comment">// 获取该元素E之前的子集合(不包含E本身)</span></span><br><span class="line">tailSet(E)              <span class="comment">// 获取该元素E之后的子集合(包含E本身)</span></span><br><span class="line">first()                 <span class="comment">// 获取Set中的第一个元素</span></span><br><span class="line">last()                  <span class="comment">// 获取Set中的最后一个元素</span></span><br><span class="line"></span><br><span class="line">spliterator()           <span class="comment">// 在这个已排序的集合中创建一个可分割的迭代器</span></span><br></pre></td></tr></table></figure></p>
+<p>NavigableSet是Sorted的拓展接口，集合的有序化之外，还增加了有序集合的可操作方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">ceiling(E)              <span class="comment">// 返回该Set中大于或等于该元素E的最小元素(包含自身)</span></span><br><span class="line">descendingIterator()    <span class="comment">// 在这个Set中以降序返回一个迭代器</span></span><br><span class="line">descendingSet()         <span class="comment">// 返回该Set的倒序</span></span><br><span class="line">floor(E)                <span class="comment">// 返回该Set中小于或等于该元素E的最大元素(包含自身)</span></span><br><span class="line">higher(E)               <span class="comment">// 返回该Set中大于该元素E的最小元素(不包含自身)</span></span><br><span class="line">lower(E)                <span class="comment">// 返回该Set中小于该元素E的最大元素(不包含自身)</span></span><br><span class="line">pollFirst()             <span class="comment">// 检索并删除第一个元素(最小)，如果该Set为空，则返回null</span></span><br><span class="line">pollLast()              <span class="comment">// 检索并删除最后一个元素(最大)，如果该Set为空，则返回null</span></span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>以上最小意为<code>comparator</code>排序规则中最小的那个</p>
+</blockquote>
+<h4 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h4><p>TreeMap是SortedMap的实现类，既然需要实现有序的不包含重复元素的集合，自然不能使用HashMap来存储元素，而是通过TreeMap作为元素的存储对象，与HashSet类似，TreeSet也是将元素存储在Map的Key中，Value为空对象。因为TreeMap中的Key不可为null值，故TreeSet中也不允许存储null值的元素。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>TreeSet是不允许插入null值的</li>
+<li>TreeSet中元素的遍历只能通过iterator迭代</li>
+</ul>
+</blockquote>
+<h4 id="ConcurrentSkipListSet"><a href="#ConcurrentSkipListSet" class="headerlink" title="ConcurrentSkipListSet"></a>ConcurrentSkipListSet</h4><p>ConcurrentSkipListSet是<code>java.util.concurrent</code>包下的有序不包含重复元素的集合的实现，基于有序的Map类型<code>ConcurrentSkipListMap</code>实现，除此之外与TreeSet并未有太多不同。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>有序的集合中都不能插入null值，因为null并不能调用元素对象中的<code>comparator()</code>方法。</li>
+</ul>
+</blockquote>
+<h2 id="Queue-interface"><a href="#Queue-interface" class="headerlink" title="Queue(interface)"></a>Queue(interface)</h2><p>队列是用来保存待处理数据的集合，是一种先进先出(FIFO)的数据集合。接口提供的操作有：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">add(E)      <span class="comment">// 进队列(同offer())</span></span><br><span class="line">poll()      <span class="comment">// 出队列，获取并移除队列头元素，如果队列为空时返回 null</span></span><br><span class="line">element()   <span class="comment">// 获取队列头元素，当队列为空时抛出异常</span></span><br><span class="line">offer(E)    <span class="comment">// 如果可以在不违反容量限制的情况下立即将指定的元素插入到这个队列中。</span></span><br><span class="line">peek()      <span class="comment">// 获取队列头元素，当队列为空时返回 null</span></span><br><span class="line">remove()    <span class="comment">// 移除队列头元素，当队列为空时抛出异常</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="PriorityQueue"><a href="#PriorityQueue" class="headerlink" title="PriorityQueue"></a>PriorityQueue</h3><p>PriorityQueue是一个基于优先级的无界优先级队列，PriorityQueue是基于数组实现，其中有一个私有属性<code>private final Comparator&lt;? super E&gt; comparator;</code>，且通过<code>add(E)</code>方法的实现可以看出，该队列类型中的元素在每次有新元素插入的时候都会调用一次<code>siftUp(int, E)</code>，当有元素出队列时，调用<code>shftDown(int, E)</code>：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> k 插入元素前队列的size</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x 需要插入的元素</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftUp</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (comparator != <span class="keyword">null</span>)</span><br><span class="line">        siftUpUsingComparator(k, x);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        siftUpComparable(k, x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftUpComparable</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</span><br><span class="line">    Comparable&lt;? <span class="keyword">super</span> E&gt; key = (Comparable&lt;? <span class="keyword">super</span> E&gt;) x;</span><br><span class="line">    <span class="keyword">while</span> (k &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> parent = (k - <span class="number">1</span>) &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        Object e = queue[parent];</span><br><span class="line">        <span class="keyword">if</span> (key.compareTo((E) e) &gt;= <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        queue[k] = e;</span><br><span class="line">        k = parent;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[k] = key;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftUpUsingComparator</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (k &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">int</span> parent = (k - <span class="number">1</span>) &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        Object e = queue[parent];</span><br><span class="line">        <span class="keyword">if</span> (comparator.compare(x, (E) e) &gt;= <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        queue[k] = e;</span><br><span class="line">        k = parent;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[k] = x;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// </span></span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> k 出队列元素的位置(poll()操作时k值为0)</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> x 出队列元素</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftDown</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (comparator != <span class="keyword">null</span>)</span><br><span class="line">        siftDownUsingComparator(k, x);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        siftDownComparable(k, x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftDownComparable</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</span><br><span class="line">    Comparable&lt;? <span class="keyword">super</span> E&gt; key = (Comparable&lt;? <span class="keyword">super</span> E&gt;)x;</span><br><span class="line">    <span class="keyword">int</span> half = size &gt;&gt;&gt; <span class="number">1</span>;        <span class="comment">// loop while a non-leaf</span></span><br><span class="line">    <span class="keyword">while</span> (k &lt; half) &#123;</span><br><span class="line">        <span class="keyword">int</span> child = (k &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>; <span class="comment">// assume left child is least</span></span><br><span class="line">        Object c = queue[child];</span><br><span class="line">        <span class="keyword">int</span> right = child + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (right &lt; size &amp;&amp;</span><br><span class="line">            ((Comparable&lt;? <span class="keyword">super</span> E&gt;) c).compareTo((E) queue[right]) &gt; <span class="number">0</span>)</span><br><span class="line">            c = queue[child = right];</span><br><span class="line">        <span class="keyword">if</span> (key.compareTo((E) c) &lt;= <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        queue[k] = c;</span><br><span class="line">        k = child;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[k] = key;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">siftDownUsingComparator</span><span class="params">(<span class="keyword">int</span> k, E x)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> half = size &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span> (k &lt; half) &#123;</span><br><span class="line">        <span class="keyword">int</span> child = (k &lt;&lt; <span class="number">1</span>) + <span class="number">1</span>;</span><br><span class="line">        Object c = queue[child];</span><br><span class="line">        <span class="keyword">int</span> right = child + <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">if</span> (right &lt; size &amp;&amp;</span><br><span class="line">            comparator.compare((E) c, (E) queue[right]) &gt; <span class="number">0</span>)</span><br><span class="line">            c = queue[child = right];</span><br><span class="line">        <span class="keyword">if</span> (comparator.compare(x, (E) c) &lt;= <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        queue[k] = c;</span><br><span class="line">        k = child;</span><br><span class="line">    &#125;</span><br><span class="line">    queue[k] = x;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过以上<code>siftUp(int, E)</code>,<code>siftDown(int, E)</code>的实现可以看出，元素的插入之后，siftUp操作并不是将队列中的元素进行排序，而只是在插入的元素放在队列的稍后端，siftDown操作也只是将数组中剩下的最小的元素放到队列头，这样点到即止的操作在非排序的情况下实现出队列的元素是队列已有元素的从小到大（即Priority）可以大大的节省排序带来的消耗。我们再看看它的扩容策略：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">grow</span><span class="params">(<span class="keyword">int</span> minCapacity)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> oldCapacity = queue.length;</span><br><span class="line">    <span class="comment">// Double size if small; else grow by 50%</span></span><br><span class="line">    <span class="keyword">int</span> newCapacity = oldCapacity + ((oldCapacity &lt; <span class="number">64</span>) ?</span><br><span class="line">                                     (oldCapacity + <span class="number">2</span>) :</span><br><span class="line">                                     (oldCapacity &gt;&gt; <span class="number">1</span>));</span><br><span class="line">    <span class="comment">// overflow-conscious code</span></span><br><span class="line">    <span class="keyword">if</span> (newCapacity - MAX_ARRAY_SIZE &gt; <span class="number">0</span>)</span><br><span class="line">        newCapacity = hugeCapacity(minCapacity);</span><br><span class="line">    queue = Arrays.copyOf(queue, newCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看出，如果插入一个元素，容量不够用的情况下，当前容量小于64时，容量已步长为2的方式递增，如果当前容量大于或等于64，容量增长为当前容量的3/2倍。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>队列中插入的元素不能为 null.</li>
+<li>每次有元素插入都会部分调整且非排序，故PriorityQueue中的元素是无序存储的。</li>
+<li>PriorityQueue并非先进先出类型的队列。</li>
+</ul>
+</blockquote>
+<h3 id="ConcurrentLinkedQueue"><a href="#ConcurrentLinkedQueue" class="headerlink" title="ConcurrentLinkedQueue"></a>ConcurrentLinkedQueue</h3><p>通过类名就知道，ConcurrentLinkedQueue是基于链接节点，是concurrent包下的队列实现，线程安全的无界队列，该队列遵循先进先出(FIFO)原则。在ConcurrentLinekdQueue中，没有<code>size</code>或<code>lenght</code>记录队列的大小，每次在通过<code>size()</code>获取该队列的大小的时候，都会遍历一次整个队列，统计该队列中元素的个数。可以通过<code>remove(Object)</code>移除队列中的元素，<code>peek()</code>获取队列头部的元素（进入队列最长时间的元素），通过<code>iterator()</code>遍历队列中的元素。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>ConcurrentLinkedQueue是线程安全的队列</li>
+<li>ConcurrentLinkedQueue是遵循FIFO原则的队列</li>
+</ul>
+</blockquote>
+<h3 id="BlockingQueue-interface"><a href="#BlockingQueue-interface" class="headerlink" title="BlockingQueue(interface)"></a>BlockingQueue(interface)</h3><p>BlockingQueue即阻塞队列，对队列的操作，会发生阻塞的情况有：</p>
+<blockquote>
+<p>1、当队列满的时候进行入队操作<br>2、当队列为空的时候进行出队操作<br>即当一个线程对该队列操作，遇到阻塞的情况，需要另一线程对该队列操作至该队列达到非阻塞状态，譬如追加元素到已满的队列，发生阻塞，需要另一线程对该队列执行出队操作，入队操作的线程才能跳出阻塞状态继续执行。通过以上特性，阻塞队列是线程安全的。BlockingQueue有以下常用操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">add(E)                              <span class="comment">// 入队，当队列处于阻塞状态，则等待入队</span></span><br><span class="line">offer(E)                            <span class="comment">// 根据以上线性数据结构的了解，offer操作与add操作一致</span></span><br><span class="line">put(E)                              <span class="comment">// 入队，当队列处于阻塞状态，则等待入队，如果被打断，则抛出 InterruptedException</span></span><br><span class="line">offer(E, <span class="keyword">long</span>, TimeUnit)            <span class="comment">// 入队，指定允许阻塞等待的时间，如果被打断，则抛出InterruptedException</span></span><br><span class="line">take()                              <span class="comment">// 出队，当队列处于阻塞状态，则等待出队，如果被打断，则抛出InterruptedException</span></span><br><span class="line">poll(<span class="keyword">long</span>, TimeUnit)                <span class="comment">// 出队，指定允许阻塞等待的时间，如果被打断，则抛出InterruptedException</span></span><br><span class="line">remainingCapacity()                 <span class="comment">// 返回队列理想的大小（容量），即队列元素超过该大小则入队操作将blocking</span></span><br><span class="line">remove(Object)                      <span class="comment">// 移除指定元素Object</span></span><br><span class="line">contains(Object)                    <span class="comment">// 检查队列中是否包含该元素Object</span></span><br><span class="line">drainTo(Collection&lt;? <span class="keyword">super</span> E&gt;)      <span class="comment">// 移出队列中的所有元素到集合E中，并返回移出元素的数量</span></span><br><span class="line">drainTo(Collection&lt;? <span class="keyword">super</span> E&gt;, <span class="keyword">int</span>) <span class="comment">// 移除指定数量队列中的元素到集合E中，并返回移出元素的数量</span></span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>BlockingQueue是线程安全的队列</li>
+</ul>
+</blockquote>
+<h4 id="ArrayBlockingQueue"><a href="#ArrayBlockingQueue" class="headerlink" title="ArrayBlockingQueue"></a>ArrayBlockingQueue</h4><p>ArrayBlockingQueue是基于数组实现的，遵循先进先出(FIFO)原则的阻塞队列。既然是阻塞队列，那就会有一个理想的容量，超过该容量之后，再要入队操作则进入阻塞状态。可以通过<code>new ArrayBlockingQueue(int)</code>创建一个指定容量的数组类型阻塞队列（默认在队列遇到阻塞情况时，不保证队列的先进先出原则），<code>new ArrayBlockingQueue(int, boolean)</code>创建一个指定容量，并指定当队列遇到阻塞情况是，是否保证队列的FIFO原则，<code>new ArrayBlockingQueue(int, boolean, Collection&lt;? extends E&gt;)</code>从已有集合中创建一个指定容量的，指定在阻塞情况下是否保证FIFO原则的数组阻塞队列。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** The queued items */</span></span><br><span class="line"><span class="keyword">final</span> Object[] items;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** items index for next take, poll, peek or remove */</span></span><br><span class="line"><span class="keyword">int</span> takeIndex;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** items index for next put, offer, or add */</span></span><br><span class="line"><span class="keyword">int</span> putIndex;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Number of elements in the queue */</span></span><br><span class="line"><span class="keyword">int</span> count;</span><br><span class="line"><span class="comment">/** Condition for waiting takes */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notEmpty;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Condition for waiting puts */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> Condition notFull;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">offer</span><span class="params">(E e)</span> </span>&#123;</span><br><span class="line">    checkNotNull(e);</span><br><span class="line">    <span class="keyword">final</span> ReentrantLock lock = <span class="keyword">this</span>.lock;</span><br><span class="line">    lock.lock();</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (count == items.length)</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            enqueue(e);</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        lock.unlock();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">enqueue</span><span class="params">(E x)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// assert lock.getHoldCount() == 1;</span></span><br><span class="line">    <span class="comment">// assert items[putIndex] == null;</span></span><br><span class="line">    <span class="keyword">final</span> Object[] items = <span class="keyword">this</span>.items;</span><br><span class="line">    items[putIndex] = x;</span><br><span class="line">    <span class="keyword">if</span> (++putIndex == items.length)</span><br><span class="line">        putIndex = <span class="number">0</span>;</span><br><span class="line">    count++;</span><br><span class="line">    notEmpty.signal();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过元素的入队实现可以看出，每当有元素入队，入队操作就会使用<code>ReentrantLock</code>上锁。在指定容量的队列中，通过固定数组存储队列的元素，当数组满了（putIndex==items.length）之后，下一个需要入队的元素将追加到数组初始位置，从数组的声明也可看出，已经实例化的队列，其容量是不允许再变更的。元素入队成功之后，给一个signal给<code>notEmpty</code>Condition<a href="http://blog.csdn.net/u011116672/article/details/51064752" title="CSDN blog关于Condition介绍" target="_blank" rel="noopener">Condition的用法参考</a>,通知正在Condition变量等待队列的线程从await方法返回，并且在返回前已经获得了锁。它的出队列操作则相反，当有元素出队列时，给<code>dequeue()</code>操作上锁，取出队列头的元素，将数组中该位置置为null, 给<code>notFull()</code>一个signal。</p>
+<blockquote>
+<p><strong>注意</strong></p>
+<ul>
+<li>ArrayBlockingQueue遵循FIFO</li>
+<li>ArrayBlockingQueue是有界队列</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>BlockingQueue还有如 <strong>DelayQueue</strong>,DelayQueue是一个可以拥有无限容量的阻塞延时队列，该队列的存储通过PriorityQueue实现，拥有PriorityQueue元素优先级的特性，DelayQueue存储的对象都需要实现了Delayed接口。<strong>LinkedBlockingQueue</strong>, 故名思议是通过Node实现的单向链式阻塞队列，遵循FIFO,默认容量为<code>Integer.MAX_VALUE</code>,也可以指定容量，当队列中元素数量达到入量时，再插入元素将失败。PriorityBlockingQueue, PriorityBlockingQueue是PriorityQueue的阻塞实现，是一个无界优先阻塞队列。<strong>SynchronousQueue</strong>, 同步阻塞队列，当有元素进入队列时，必须要等这个元素出队列，才能再有元素入队，反之亦然，SynchronousQueue没有容量这一概念，甚至它的容量不是1. <strong>TransferQueue</strong>, 以及它的实现LinkedTransferQueue, 该类型队列是jdk1.7新增的，有点类似SynchronousQueue, 但功能上比SynchronousQueue丰富，对比可参考<a href="http://puredanger.github.io/tech.puredanger.com/2009/02/28/java-7-transferqueue/" title="Java 7 TransferQueue" target="_blank" rel="noopener">Java 7 TransferQueue - Pure Danger</a>或它的译文<a href="http://ifeve.com/java-transfer-queue/" title="Java 7中的TransferQueue" target="_blank" rel="noopener">ivfeve</a>。</p>
+</blockquote>
+<h3 id="Deque-interface"><a href="#Deque-interface" class="headerlink" title="Deque(interface)"></a>Deque(interface)</h3><p>Deque(“double ended queue”的简写)，是双向队列的接口，是一种可以两端做同样操作的线性集合。商量双向队列的实现有<strong>ArrayQueue</strong>,<strong>ConcurrentLinkedDeque</strong>, <strong>LinkedList</strong>, 以及它的阻塞双向队列实现<strong>LinkedBlockingDeque</strong>. 很明显，<strong>ArrayDeque</strong>是基于数组的形式实现的大小可变化的双向队列，遵循FIFO原则，可配置初始容量，默认初始容量为16，当容量不够用时使用翻倍策略扩容。<strong>ConcurrentLinkedDeque</strong>是基于双向节点实现的无界链式线程安全的双向队列，遵循FIFO原则。<strong>LinkedList</strong>同时也是List的实现，同时具有双向队列的特性。<strong>LinkedBlockingDeque</strong>是并发包下的BlockingDeque的实现，基于节点，遵循FIFO的双向队列。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a href="http://www.cnblogs.com/xrq730/p/4979021.html" title="ReentrantLock实现原理深入探究" target="_blank" rel="noopener">(ReentrantLock实现原理深入探究)</a></li>
+<li><a href="http://blog.csdn.net/vernonzheng/article/details/8288251" title="ReentrantLock与Condition" target="_blank" rel="noopener">Java多线程（九）之ReentrantLock与Condition</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/dist/tags/java/" rel="tag"># java</a>
+          
+            <a href="/dist/tags/set/" rel="tag"># set</a>
+          
+            <a href="/dist/tags/list/" rel="tag"># list</a>
+          
+            <a href="/dist/tags/queue/" rel="tag"># queue</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/article/2017/05/27/2017-05-27-Linux下boot-grub-i386-pc-normal-mod未找到问题/" rel="next" title="Linux下boot/grub/i386-pc/normal.mod未找到问题">
+                <i class="fa fa-chevron-left"></i> Linux下boot/grub/i386-pc/normal.mod未找到问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/article/2017/06/17/2017-06-17-Hadoop学习笔记-Hadoop-HDFS环境搭建/" rel="prev" title="Hadoop学习笔记-Hadoop HDFS环境搭建">
+                Hadoop学习笔记-Hadoop HDFS环境搭建 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/headicon.jpg" alt="Zero.Zeng">
+          <p class="site-author-name" itemprop="name">Zero.Zeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">学到老才能活到老</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#List-interface"><span class="nav-number">1.</span> <span class="nav-text">List(interface)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ArrayList"><span class="nav-number">1.1.</span> <span class="nav-text">ArrayList</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Vector"><span class="nav-number">1.2.</span> <span class="nav-text">Vector</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Stack"><span class="nav-number">1.2.1.</span> <span class="nav-text">Stack</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#LinkedList"><span class="nav-number">1.3.</span> <span class="nav-text">LinkedList</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CopyOnWriteArrayList"><span class="nav-number">1.4.</span> <span class="nav-text">CopyOnWriteArrayList</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Set-interface"><span class="nav-number">2.</span> <span class="nav-text">Set(interface)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HashSet"><span class="nav-number">2.1.</span> <span class="nav-text">HashSet</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#LinkedHashSet"><span class="nav-number">2.1.1.</span> <span class="nav-text">LinkedHashSet</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SortedSet-interface-、NavigableSet-interface"><span class="nav-number">2.2.</span> <span class="nav-text">SortedSet(interface)、NavigableSet(interface)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#TreeSet"><span class="nav-number">2.2.1.</span> <span class="nav-text">TreeSet</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ConcurrentSkipListSet"><span class="nav-number">2.2.2.</span> <span class="nav-text">ConcurrentSkipListSet</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Queue-interface"><span class="nav-number">3.</span> <span class="nav-text">Queue(interface)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PriorityQueue"><span class="nav-number">3.1.</span> <span class="nav-text">PriorityQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ConcurrentLinkedQueue"><span class="nav-number">3.2.</span> <span class="nav-text">ConcurrentLinkedQueue</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#BlockingQueue-interface"><span class="nav-number">3.3.</span> <span class="nav-text">BlockingQueue(interface)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ArrayBlockingQueue"><span class="nav-number">3.3.1.</span> <span class="nav-text">ArrayBlockingQueue</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deque-interface"><span class="nav-number">3.4.</span> <span class="nav-text">Deque(interface)</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zero.Zeng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2147164"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cythKaHbI';
+      var conf = 'f06d65f3f1b9488009a74b831c28e154';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+  
+  
+  <link rel="stylesheet" media="all" href="/lib/Han/dist/han.min.css?v=3.3">
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="java,jdk阅读计划,Reference,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="摇蒲小笙" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2">
+
+
+
+
+
+
+<meta name="description" content="在jdk1.2之后，位于java.lang.ref包下有Reference的实现SoftReference(软引用),WeakReference(弱引用),PhantomReference(虚引用),FinalReference(即强引用StrongReference),在jdk1.2之前所有的引用皆为强引用。Reference作为一个abstract修饰的类，是所有引用类型的基类，此类定义了常用">
+<meta name="keywords" content="java,jdk阅读计划,Reference">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java引用类型">
+<meta property="og:url" content="xn--4gq28lcrm21g.cc/article/2018/01/26/2018-01-26-Java引用类型/index.html">
+<meta property="og:site_name" content="摇蒲小笙">
+<meta property="og:description" content="在jdk1.2之后，位于java.lang.ref包下有Reference的实现SoftReference(软引用),WeakReference(弱引用),PhantomReference(虚引用),FinalReference(即强引用StrongReference),在jdk1.2之前所有的引用皆为强引用。Reference作为一个abstract修饰的类，是所有引用类型的基类，此类定义了常用">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-06T17:47:36.795Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java引用类型">
+<meta name="twitter:description" content="在jdk1.2之后，位于java.lang.ref包下有Reference的实现SoftReference(软引用),WeakReference(弱引用),PhantomReference(虚引用),FinalReference(即强引用StrongReference),在jdk1.2之前所有的引用皆为强引用。Reference作为一个abstract修饰的类，是所有引用类型的基类，此类定义了常用">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="xn--4gq28lcrm21g.cc/article/2018/01/26/2018-01-26-Java引用类型/">
+
+
+
+
+
+  <title>Java引用类型 | 摇蒲小笙</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?7fd82a4fddb6f5a8020353452222fca3";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">摇蒲小笙</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">天地不仁，以万物为刍狗</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>
+            
+            站点地图
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="xn--4gq28lcrm21g.cc/article/2018/01/26/2018-01-26-Java引用类型/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Zero.Zeng">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/headicon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="摇蒲小笙">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java引用类型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-26T01:08:03+08:00">
+                2018-01-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/dist/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/article/2018/01/26/2018-01-26-Java引用类型/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="article/2018/01/26/2018-01-26-Java引用类型/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </span></div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body han-init-context" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在jdk1.2之后，位于<code>java.lang.ref</code>包下有<code>Reference</code>的实现<code>SoftReference</code>(软引用),<code>WeakReference</code>(弱引用),<code>PhantomReference</code>(虚引用),<code>FinalReference</code>(即强引用StrongReference),在jdk1.2之前所有的引用皆为强引用。<code>Reference</code>作为一个<code>abstract</code>修饰的类，是所有引用类型的基类，此类定义了常用于所有引用对象的操作。因为引用对象(*Reference)是通过与垃圾回收器的密切合作来实现的，所以不能由程序员直接为此类(<code>Reference</code>)创建子类。Reference类型的使用主要是为了增强jvm内存管理功能，通过使用不同的引用类型，程序员可以在一定程度上与GC交互，通过定义不同对象的引用类型改善GC的效率。被强引用类型引用的对象即使在OOM的情况下也不会被GC掉，软引用的对象在内存吃紧的情况下触发的GC过程中会被清除，弱引用的对象只要触动了GC就会被清除，虚引用的对象引用并不影响对象的生命时间，虚引用主要用来跟踪对象被垃圾回收器回收的活动。</p>
+<a id="more"></a>
+<h1 id="Reference预读"><a href="#Reference预读" class="headerlink" title="Reference预读"></a>Reference预读</h1><p>需要了解引用怎么作用的，需先了解它的两个关键类，<code>Reference</code>和<code>ReferenceQueue</code>。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p>作为所有引用类型的基类，Reference定义了所有引用对象的常用操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">clear</span><span class="params">()</span></span>;           <span class="comment">// 清除此引用对象。调用此方法不会导致对象被加入队列。</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">()</span></span>;      <span class="comment">// 将此引用对象添加到引用对象已向其注册的队列（如果有）。如果成功将此引用对象加入队列中，则返回 true；如果它已经加入队列或者在创建时没有在队列中注册它，则返回 false。</span></span><br><span class="line"><span class="function">T <span class="title">get</span><span class="params">()</span></span>;                <span class="comment">// 返回此引用对象的指示对象。如果此引用对象已经由程序或垃圾回收器清除，则此方法将返回 null。</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">isEnqueue</span><span class="params">()</span></span>;    <span class="comment">// 由程序或垃圾回收器通知是否已将此引用对象加入队列。当且仅当此引用对象已经加入队列时返回 true。</span></span><br></pre></td></tr></table></figure></p>
+<p>每个引用都有以下属性：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> T referent;         <span class="comment">/* Treated specially by GC */</span>       <span class="comment">// 定义引用的对象</span></span><br><span class="line"><span class="keyword">volatile</span> ReferenceQueue&lt;? <span class="keyword">super</span> T&gt; queue;                       <span class="comment">// 引用队列</span></span><br><span class="line">Reference next;                                                 <span class="comment">// 作为引用队列的下一个元素指针</span></span><br><span class="line"><span class="keyword">transient</span> <span class="keyword">private</span> Reference&lt;T&gt; discovered;  <span class="comment">/* used by VM */</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="ReferenceQueue"><a href="#ReferenceQueue" class="headerlink" title="ReferenceQueue"></a>ReferenceQueue</h2><p>引用对象队列，是用来保存注册为引用对象的队列。在检测到引用对象的可到达性被变更后，垃圾回收器会将已注册的引用对象添加到该队列中。引用队列是一个线程安全的单向队列类型，通过<code>volatile</code>声明的Reference类型的<code>head</code>指针作为队列的入口，属性<code>queueLength</code>记录队列长度，对该队列的所有操作都会通过<code>synchronized</code>关键字锁住队列本身，即每个引用队列都具备一个锁维护出入队的线程安全：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">Lock</span> </span>&#123; &#125;;</span><br><span class="line"><span class="keyword">private</span> Lock lock = <span class="keyword">new</span> Lock();</span><br></pre></td></tr></table></figure></p>
+<p>ReferenceQueue的所有入队方法为<code>friendly</code>修饰的，即所有引用队列元素的入队操作都是由该队列所在的引用对象完成的：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ReferenceQueue的入队(Called only by Reference class)</span></span><br><span class="line"><span class="function"><span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">(Reference&lt;? extends T&gt; r)</span> </span>&#123; <span class="comment">/* Called only by Reference class */</span></span><br><span class="line">    <span class="keyword">synchronized</span> (lock) &#123;</span><br><span class="line">        <span class="comment">// Check that since getting the lock this reference hasn't already been</span></span><br><span class="line">        <span class="comment">// enqueued (and even then removed)</span></span><br><span class="line">        ReferenceQueue&lt;?&gt; queue = r.queue;</span><br><span class="line">        <span class="keyword">if</span> ((queue == NULL) || (queue == ENQUEUED)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">assert</span> queue == <span class="keyword">this</span>;</span><br><span class="line">        r.queue = ENQUEUED;</span><br><span class="line">        r.next = (head == <span class="keyword">null</span>) ? r : head;</span><br><span class="line">        head = r;</span><br><span class="line">        queueLength++;</span><br><span class="line">        <span class="keyword">if</span> (r <span class="keyword">instanceof</span> FinalReference) &#123;</span><br><span class="line">            sun.misc.VM.addFinalRefCount(<span class="number">1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        lock.notifyAll();</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 仅在 Reference中被调用(Reference.enqueue())</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">enqueue</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">this</span>.queue.enqueue(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>除了被引用掌控的入队操作，ReferenceQueue还具有以下操作：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Reference&lt;? extends T&gt; poll();               <span class="comment">// 轮询此队列，查看是否存在可用的引用对象。如果存在一个立即可用的对象，则从该队列中移除此对象并返回。否则此方法立即返回 null。</span></span><br><span class="line"><span class="keyword">public</span> Reference&lt;? extends T&gt; remove(<span class="keyword">long</span> timeout); <span class="comment">// 移除此队列中的下一个引用对象，阻塞到有一个对象变得可用或者给定的超时期(ms)满了为止。如果超时值为零，则无限期地阻塞。</span></span><br><span class="line"><span class="keyword">public</span> Reference&lt;? extends T&gt; remove()              <span class="comment">// 移除此队列中的下一个引用对象，阻塞到某个对象变得可用为止。即超时值被设为0。</span></span><br></pre></td></tr></table></figure></p>
+<h1 id="四种引用类型"><a href="#四种引用类型" class="headerlink" title="四种引用类型"></a>四种引用类型</h1><h2 id="SoftReference-软引用"><a href="#SoftReference-软引用" class="headerlink" title="SoftReference 软引用"></a>SoftReference 软引用</h2><p>软引用对象，在响应内存需要时，由垃圾回收器决定是否清除此对象。<strong>软引用对象最常用于实现内存敏感的缓存</strong>。假定垃圾回收器确定在某一时间点某个对象是软可到达对象，这时，它可以选择自动清除针对该对象的所有软引用，以及通过强引用链，从其可以到达该对象的针对任何其他软可到达对象的所有软引用。在同一时间或晚些时候，它会将那些已经向引用队列注册的新清除的软引用加入队列。软可到达对象的所有软引用都要保证在虚拟机抛出 OutOfMemoryError 之前已经被清除。否则，清除软引用的时间或者清除不同对象的一组此类引用的顺序将不受任何约束。然而，虚拟机倾向于反对清除最近访问或使用过的软引用。<br>此类的直接实例可用于实现简单缓存；该类或其派生的子类还可用于更大型的数据结构，以实现更复杂的缓存。只要软引用的指示对象是强可到达对象，即正在实际使用的对象，就不会清除软引用。例如，通过保持最近使用的项的强指示对象，并由垃圾回收器决定是否放弃剩余的项，复杂的缓存可以防止放弃最近使用的项。 </p>
+<h2 id="WeakReference-弱引用"><a href="#WeakReference-弱引用" class="headerlink" title="WeakReference 弱引用"></a>WeakReference 弱引用</h2><p>弱引用对象，在弱引用对象没有任何强引用的情况下，触发GC时弱引用对象就会被清除。对应使用到弱引用的数据结构有<code>WeakHashMap</code>，该Map的元素类即继承自<code>WeakReference</code>，通常该类型Map也被用来作为缓存。</p>
+<h2 id="PhantomReference-虚引用"><a href="#PhantomReference-虚引用" class="headerlink" title="PhantomReference 虚引用"></a>PhantomReference 虚引用</h2><p>虚引用对象，在垃圾回收器决定它引用的对象可能要被回收时就会将其添加到队列(构造方法中的那个ReferenceQueue)中，虚引用经常被用于比Java的finalization机制更灵活的方式来调度预验(pre-mortem)清除操作。为了确保可回收的对象仍然保持原状，虚引用的指示对象不能被获取，即虚引用的<code>get</code>方法总是返回<code>null</code>（阻止其指向的几乎被销毁的对象重新复活）。通过虚引用可到达的对象将仍然保持原状，直到所有这类引用都被清除，或者它们都变得不可到达。虚引用和前面的软引用、弱引用不同，虚引用在加入队列时并没有通过垃圾回收器自动清除，它并不影响对象的生命周期。<strong>虚引用必须和引用队列关联使用，当垃圾回收器准备回收一个对象时，如果发现它还有虚引用，就会把这个虚引用加入到与之关联的引用队列中。程序可以通过判断引用队列中是否已经加入了虚引用，来了解被引用的对象是否将要被垃圾回收。如果程序发现某个虚引用已经被加入到引用队列，那么就可以在所引用的对象的内存被回收之前采取必要的行动（即前文提及的预验(pre-mortem)清除操作）。</strong></p>
+<h2 id="FinalReference-StrongReference-强引用"><a href="#FinalReference-StrongReference-强引用" class="headerlink" title="FinalReference(StrongReference)强引用"></a>FinalReference(StrongReference)强引用</h2><p>强引用其实就是默认的引用类型，是指创建一个对象并把这个对象赋给一个引用变量，譬如<code>String a = new String(&quot;a is a strong reference.&quot;);</code>，则<code>a</code>这个引用即是强引用，虚拟机将这类引用就通过<code>FinalReference</code>包装处理。<strong>强引用有引用变量指向时永远不会被垃圾回收，JVM宁愿抛出OutOfMemory错误也不会回收这种对象</strong>。如果需要强制释放强引用引用的对象，可以将强引用引用到<code>null</code>，那该对象在没有被引用的情况下就能响应GC操作，被清理掉了。</p>
+<h3 id="Finalizer"><a href="#Finalizer" class="headerlink" title="Finalizer"></a>Finalizer</h3><p>关于 Finalizer类的描述，祥见<a href="https://yq.aliyun.com/articles/2947?spm=0.0.0.0.At14xp" title="JVM源码分析之FinalReference完全解读-寒泉子" target="_blank" rel="noopener">JVM源码分析之FinalReference完全解读</a>。综合文章描述有以下几点：<br>1、Finalizer是FinalReference的继承，package(包)访问权限，final不可扩展类。<br>2、通过类中是否存在一个参数为空，返回void的非空<code>void finalize()</code>方法判断该类是否为一个 Finalizer类。<br>3、Finalizer类对象在构造函数返回之前调用<code>Finalizer.register</code>方法，可通过配置<code>-XX:-RegisterFinalizersAtInit</code>关闭，并将在对象空间分配好之后调用<code>Finalizer.register</code>，将强引用类型对象引用注册为<code>Finalizer</code>类型引用：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="title">Finalizer</span><span class="params">(Object finalizee)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">super</span>(finalizee, queue);</span><br><span class="line">    add();  <span class="comment">// 即将 this添加到</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* Invoked by VM */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">register</span><span class="params">(Object finalizee)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">new</span> Finalizer(finalizee);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>当通过clone的方式复制一个对象时，如果当前类是一个f类，那么在clone完成时将调用<code>Finalizer.register</code>方法进行注册。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>其实 SoftReference, WeakReference 以及 PhantomReference 的构造函数都可以接收一个 ReferenceQueue 对象。当 SoftReference 以及 WeakReference 被清空的同时，也就是 Java 垃圾回收器准备对它们所指向的对象进行回收时，调用对象的<code>finalize()</code>方法之前，它们自身会被加入到这个 ReferenceQueue 对象中，此时可以通过 ReferenceQueue 的<code>poll()</code>方法取到它们。而 PhantomReference 只有当 Java 垃圾回收器对其所指向的对象真正进行回收时，会将其加入到这个 ReferenceQueue 对象中，这样就可以追综对象的销毁情况。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">引用类型</th>
+<th style="text-align:center">取得目标对象的方式</th>
+<th style="text-align:center">垃圾回收条件</th>
+<th style="text-align:center">是否可能内存泄露</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">强引用</td>
+<td style="text-align:center">直接引用</td>
+<td style="text-align:center">不回收</td>
+<td style="text-align:center">可能</td>
+</tr>
+<tr>
+<td style="text-align:center">软引用</td>
+<td style="text-align:center">通过get()取得</td>
+<td style="text-align:center">视内存情况(OOM前)</td>
+<td style="text-align:center">不可能</td>
+</tr>
+<tr>
+<td style="text-align:center">弱引用</td>
+<td style="text-align:center">通过get()取得</td>
+<td style="text-align:center">有GC即回收</td>
+<td style="text-align:center">不可能</td>
+</tr>
+<tr>
+<td style="text-align:center">虚引用</td>
+<td style="text-align:center">无法获取</td>
+<td style="text-align:center">不回收</td>
+<td style="text-align:center">可能</td>
+</tr>
+</tbody>
+</table>
+<p>感谢：</p>
+<ul>
+<li>JVM源码分析之FinalReference完全解读: <a href="https://yq.aliyun.com/articles/2947" title="JVM源码分析之FinalReference完全解读-寒泉子" target="_blank" rel="noopener">https://yq.aliyun.com/articles/2947</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/dist/tags/java/" rel="tag"># java</a>
+          
+            <a href="/dist/tags/jdk阅读计划/" rel="tag"># jdk阅读计划</a>
+          
+            <a href="/dist/tags/Reference/" rel="tag"># Reference</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/article/2018/01/23/2018-01-23-Redis实现分布式锁/" rel="next" title="Redis实现分布式锁">
+                <i class="fa fa-chevron-left"></i> Redis实现分布式锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/article/2018/03/03/2018-03-03-Tomcat系统架构/" rel="prev" title="Tomcat系统架构">
+                Tomcat系统架构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="uyan_frame"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/headicon.jpg" alt="Zero.Zeng">
+          <p class="site-author-name" itemprop="name">Zero.Zeng</p>
+           
+              <p class="site-description motion-element" itemprop="description">学到老才能活到老</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/">
+                <span class="site-state-item-count">39</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">49</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Reference预读"><span class="nav-number">1.</span> <span class="nav-text">Reference预读</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reference"><span class="nav-number">1.1.</span> <span class="nav-text">Reference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ReferenceQueue"><span class="nav-number">1.2.</span> <span class="nav-text">ReferenceQueue</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#四种引用类型"><span class="nav-number">2.</span> <span class="nav-text">四种引用类型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SoftReference-软引用"><span class="nav-number">2.1.</span> <span class="nav-text">SoftReference 软引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WeakReference-弱引用"><span class="nav-number">2.2.</span> <span class="nav-text">WeakReference 弱引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PhantomReference-虚引用"><span class="nav-number">2.3.</span> <span class="nav-text">PhantomReference 虚引用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FinalReference-StrongReference-强引用"><span class="nav-number">2.4.</span> <span class="nav-text">FinalReference(StrongReference)强引用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Finalizer"><span class="nav-number">2.4.1.</span> <span class="nav-text">Finalizer</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Zero.Zeng</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+    
+
+    
+      <!-- UY BEGIN -->
+      <script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2147164"></script>
+      <!-- UY END -->
+    
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cythKaHbI';
+      var conf = 'f06d65f3f1b9488009a74b831c28e154';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
